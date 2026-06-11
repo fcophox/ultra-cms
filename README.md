@@ -15,28 +15,38 @@ supabase/        Esquema versionado (migraciones, RLS, storage) + seed
 ultra.config.ts  Branding y categorías por proyecto (white-label)
 ```
 
-## Puesta en marcha (por cada clon)
+## Usar como template
+
+Este repo es un **template de GitHub**. Para un proyecto nuevo:
+
+> Pulsa **« Use this template »** en GitHub (o clónalo) → tendrás un repo propio
+> sin el historial, listo para apuntarlo a tu Supabase.
+
+## Puesta en marcha (por cada proyecto)
 
 1. **Instalar dependencias**
    ```bash
    npm install
    ```
 
-2. **Crear un proyecto en Supabase** y copiar las credenciales a `apps/admin/.env.local`:
+2. **Inicializar** — asistente interactivo que pide las credenciales del Supabase
+   de este proyecto y el branding, y escribe `apps/admin/.env.local`:
    ```bash
-   cp .env.example apps/admin/.env.local
-   # completa NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY, SUPABASE_SERVICE_ROLE_KEY
+   npm run init
    ```
+   (Las credenciales están en Supabase → Project Settings → API. Alternativa
+   manual: `cp .env.example apps/admin/.env.local` y completarlo.)
 
 3. **Aplicar el esquema** (tablas, RLS, storage):
    ```bash
    npx supabase link --project-ref <ref>
    npx supabase db push
    ```
-   O en local: `npx supabase start` y `npx supabase db reset` (aplica migraciones + seed).
+   O pega `supabase/migrations/0001_init.sql` en el **SQL Editor** de Supabase.
+   En local: `npx supabase start` y `npx supabase db reset`.
 
 4. **Crear el primer admin** en el dashboard de Supabase → Authentication → Add user
-   (el trigger crea su `profile` automáticamente).
+   (marca "Auto Confirm User"; el trigger crea su `profile` automáticamente).
 
 5. **Levantar el panel**
    ```bash

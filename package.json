@@ -8,6 +8,7 @@
     "packages/*"
   ],
   "scripts": {
+    "init": "node scripts/init.mjs",
     "dev": "npm run dev --workspace apps/admin",
     "build": "npm run build --workspace apps/admin",
     "sdk:build": "npm run build --workspace packages/sdk",
