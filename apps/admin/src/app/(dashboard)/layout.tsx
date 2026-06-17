@@ -8,6 +8,10 @@ const NAV = [
   { href: "/contacts", label: "Contactos" },
 ];
 
+const VERSION = process.env.NEXT_PUBLIC_APP_VERSION ?? "0.0.0";
+const CHANGELOG_URL =
+  "https://github.com/fcophox/ultra-cms/blob/main/CHANGELOG.md";
+
 export default async function DashboardLayout({
   children,
 }: {
@@ -42,6 +46,15 @@ export default async function DashboardLayout({
               Cerrar sesión
             </button>
           </form>
+          <a
+            href={CHANGELOG_URL}
+            target="_blank"
+            rel="noreferrer"
+            className="mt-2 block px-3 text-xs text-slate-400 transition hover:text-indigo-600"
+            title="Ver novedades"
+          >
+            UltraCMS v{VERSION} · Novedades
+          </a>
         </div>
       </aside>
       <main className="flex-1 p-8">{children}</main>
