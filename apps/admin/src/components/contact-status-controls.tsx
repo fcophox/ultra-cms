@@ -49,8 +49,8 @@ export function ContactStatusControls({ id, status }: Props) {
   const chip = (s: ContactStatus) =>
     `rounded-lg px-3 py-2 text-sm font-medium transition disabled:opacity-60 ${
       status === s
-        ? "bg-indigo-600 text-white"
-        : "border border-slate-300 text-slate-600 hover:bg-slate-100"
+        ? "bg-primary text-white"
+        : "border border-border text-muted hover:bg-foreground/5"
     }`;
 
   return (

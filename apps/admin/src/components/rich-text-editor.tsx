@@ -26,7 +26,7 @@ export function RichTextEditor({ initialContent, onChange }: Props) {
     editorProps: {
       attributes: {
         class:
-          "prose prose-slate max-w-none min-h-[320px] px-4 py-3 focus:outline-none",
+          "prose prose-slate dark:prose-invert max-w-none min-h-[320px] px-4 py-3 focus:outline-none",
       },
     },
     onUpdate: ({ editor }) => {
@@ -36,12 +36,12 @@ export function RichTextEditor({ initialContent, onChange }: Props) {
 
   if (!editor) {
     return (
-      <div className="min-h-[380px] animate-pulse rounded-lg border border-slate-300 bg-slate-50" />
+      <div className="min-h-[380px] animate-pulse rounded-lg border border-border bg-foreground/[0.03]" />
     );
   }
 
   return (
-    <div className="rounded-lg border border-slate-300 bg-white">
+    <div className="rounded-lg border border-border bg-surface">
       <Toolbar editor={editor} />
       <EditorContent editor={editor} />
     </div>
@@ -76,11 +76,11 @@ function Toolbar({ editor }: { editor: Editor }) {
 
   const btn = (active: boolean) =>
     `rounded px-2 py-1 text-sm font-medium transition ${
-      active ? "bg-indigo-600 text-white" : "text-slate-600 hover:bg-slate-100"
+      active ? "bg-primary text-white" : "text-muted hover:bg-foreground/5"
     }`;
 
   return (
-    <div className="flex flex-wrap items-center gap-1 border-b border-slate-200 p-2">
+    <div className="flex flex-wrap items-center gap-1 border-b border-border p-2">
       <button
         type="button"
         onClick={() => editor.chain().focus().toggleBold().run()}

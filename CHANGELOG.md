@@ -21,6 +21,9 @@ y el versionado sigue [SemVer](https://semver.org/lang/es/):
 - Guía de deploy en Vercel (un repo, varios proyectos) en `DEPLOY.md`.
 - GitHub Action que aplica las migraciones a todos los Supabase
   automáticamente al cambiar el esquema.
+- Tema claro / oscuro basado en el sistema de diseño (`DESIGN.MD`), con
+  tokens semánticos y persistencia. Atajo **⌘B / Ctrl+B** para alternarlo
+  (no interfiere con "negrita" dentro del editor) y botón en el panel.
 
 ## [0.2.0] — 2026-06-17
 

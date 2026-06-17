@@ -10,15 +10,15 @@ export default function LoginPage() {
     <main className="flex min-h-screen items-center justify-center p-6">
       <form
         action={formAction}
-        className="w-full max-w-sm space-y-5 rounded-2xl border border-slate-200 bg-white p-8 shadow-sm"
+        className="w-full max-w-sm space-y-5 rounded-2xl border border-border bg-surface p-8 shadow-sm"
       >
         <div className="space-y-1 text-center">
           <h1 className="text-2xl font-bold tracking-tight">UltraCMS</h1>
-          <p className="text-sm text-slate-500">Inicia sesión para continuar</p>
+          <p className="text-sm text-muted">Inicia sesión para continuar</p>
         </div>
 
         <div className="space-y-1">
-          <label htmlFor="email" className="text-sm font-medium text-slate-700">
+          <label htmlFor="email" className="text-sm font-medium text-foreground">
             Email
           </label>
           <input
@@ -27,14 +27,14 @@ export default function LoginPage() {
             type="email"
             required
             autoComplete="email"
-            className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+            className="w-full rounded-lg border border-border px-3 py-2 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
           />
         </div>
 
         <div className="space-y-1">
           <label
             htmlFor="password"
-            className="text-sm font-medium text-slate-700"
+            className="text-sm font-medium text-foreground"
           >
             Contraseña
           </label>
@@ -44,7 +44,7 @@ export default function LoginPage() {
             type="password"
             required
             autoComplete="current-password"
-            className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+            className="w-full rounded-lg border border-border px-3 py-2 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
           />
         </div>
 
@@ -55,7 +55,7 @@ export default function LoginPage() {
         <button
           type="submit"
           disabled={pending}
-          className="w-full rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-indigo-700 disabled:opacity-60"
+          className="w-full rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white transition hover:bg-primary/90 disabled:opacity-60"
         >
           {pending ? "Entrando…" : "Entrar"}
         </button>

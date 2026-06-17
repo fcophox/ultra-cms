@@ -24,7 +24,7 @@ export default async function EditArticlePage({
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-3">
-        <Link href="/articles" className="text-sm text-slate-500 hover:underline">
+        <Link href="/articles" className="text-sm text-muted hover:underline">
           ← Artículos
         </Link>
         <h1 className="flex-1 text-2xl font-bold tracking-tight">
@@ -39,9 +39,12 @@ export default async function EditArticlePage({
           title: article.title,
           slug: article.slug,
           category_id: article.category_id,
+          locale: article.locale ?? "es",
+          translation_group: article.translation_group ?? "",
           excerpt: article.excerpt ?? "",
           content: article.content,
           content_html: article.content_html ?? "",
+          data: article.data ?? null,
           cover_image_url: article.cover_image_url ?? "",
           status: article.status,
           seo_title: article.seo_title ?? "",

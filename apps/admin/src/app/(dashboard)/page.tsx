@@ -32,9 +32,9 @@ export default async function DashboardHome() {
           <Link
             key={c.label}
             href={c.href}
-            className="rounded-2xl border border-slate-200 bg-white p-5 transition hover:shadow-sm"
+            className="rounded-2xl border border-border bg-surface p-5 transition hover:shadow-sm"
           >
-            <p className="text-sm text-slate-500">{c.label}</p>
+            <p className="text-sm text-muted">{c.label}</p>
             <p className="mt-2 text-3xl font-bold">{c.value}</p>
           </Link>
         ))}

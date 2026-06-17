@@ -7,7 +7,7 @@ export default function NewCategoryPage() {
       <div className="flex items-center gap-3">
         <Link
           href="/categories"
-          className="text-sm text-slate-500 hover:underline"
+          className="text-sm text-muted hover:underline"
         >
           ← Categorías
         </Link>

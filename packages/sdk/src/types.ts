@@ -1,5 +1,7 @@
 export type ArticleStatus = "draft" | "published" | "archived";
 
+export type Locale = "es" | "en";
+
 export interface Category {
   id: string;
   slug: string;
@@ -20,6 +22,12 @@ export interface Article {
   content_html: string | null;
   cover_image_url: string | null;
   status: ArticleStatus;
+  /** Idioma de esta fila ('es' | 'en'). */
+  locale: Locale;
+  /** Enlaza las versiones por idioma del mismo artículo. */
+  translation_group: string;
+  /** Contenido estructurado (p.ej. servicios). */
+  data: Record<string, unknown> | null;
   seo_title: string | null;
   seo_description: string | null;
   published_at: string | null;
@@ -38,6 +46,8 @@ export interface ContactInput {
 export interface ListArticlesOptions {
   /** Slug de la categoría a filtrar. */
   category?: string;
+  /** Idioma a filtrar ('es' | 'en'). */
+  locale?: Locale;
   limit?: number;
   offset?: number;
 }

@@ -14,8 +14,8 @@ interface Props {
 }
 
 const field =
-  "w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100";
-const label = "text-sm font-medium text-slate-700";
+  "w-full rounded-lg border border-border px-3 py-2 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20";
+const label = "text-sm font-medium text-foreground";
 
 export function CategoryForm({ initial }: Props) {
   const router = useRouter();
@@ -89,7 +89,7 @@ export function CategoryForm({ initial }: Props) {
           className={field}
           placeholder="blog"
         />
-        <p className="text-xs text-slate-400">
+        <p className="text-xs text-muted">
           Identificador usado por el frontend: cms.articles.list(&#123; category:
           &quot;{slug || "slug"}&quot; &#125;)
         </p>
@@ -119,7 +119,7 @@ export function CategoryForm({ initial }: Props) {
         <button
           type="submit"
           disabled={pending}
-          className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-indigo-700 disabled:opacity-60"
+          className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white transition hover:bg-primary/90 disabled:opacity-60"
         >
           {pending ? "Guardando…" : "Guardar"}
         </button>

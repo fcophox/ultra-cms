@@ -7,13 +7,14 @@ insert into public.categories (slug, name, description, sort_order) values
 on conflict (slug) do nothing;
 
 -- Artículo de ejemplo publicado
-insert into public.articles (category_id, title, slug, excerpt, content_html, status, published_at)
+insert into public.articles (category_id, title, slug, locale, excerpt, content_html, status, published_at)
 select c.id,
        '¡Hola, UltraCMS!',
        'hola-ultracms',
+       'es',
        'Primer artículo de ejemplo.',
        '<p>Este contenido viene de <strong>UltraCMS</strong>.</p>',
        'published',
        now()
 from public.categories c where c.slug = 'blog'
-on conflict (category_id, slug) do nothing;
+on conflict (category_id, slug, locale) do nothing;

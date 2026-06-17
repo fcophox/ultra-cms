@@ -9,9 +9,14 @@ export interface ArticleInput {
   category_id: string;
   title: string;
   slug: string;
+  locale: "es" | "en";
+  /** UUID que enlaza versiones por idioma. Vacío = se genera uno nuevo. */
+  translation_group?: string;
   excerpt: string;
   content: unknown;
   content_html: string;
+  /** JSON estructurado (p.ej. servicios). Cadena vacía / null = sin datos. */
+  data?: unknown;
   cover_image_url: string;
   status: "draft" | "published" | "archived";
   seo_title: string;
@@ -34,9 +39,11 @@ export async function saveArticle(input: ArticleInput): Promise<ActionResult> {
     category_id: input.category_id,
     title: input.title.trim(),
     slug: input.slug.trim(),
+    locale: input.locale,
     excerpt: input.excerpt || null,
     content: input.content ?? null,
     content_html: input.content_html || null,
+    data: input.data ?? null,
     cover_image_url: input.cover_image_url || null,
     status: input.status,
     seo_title: input.seo_title || null,
@@ -68,6 +75,11 @@ export async function saveArticle(input: ArticleInput): Promise<ActionResult> {
   } else {
     const { error } = await supabase.from("articles").insert({
       ...row,
+      // Si se indica, enlaza con la versión en otro idioma; si no, la BD
+      // genera un translation_group nuevo por defecto.
+      ...(input.translation_group?.trim()
+        ? { translation_group: input.translation_group.trim() }
+        : {}),
       author_id: user?.id ?? null,
       published_at:
         input.status === "published" ? new Date().toISOString() : null,

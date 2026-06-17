@@ -5,5 +5,6 @@ export type {
   Category,
   ContactInput,
   ListArticlesOptions,
+  Locale,
   UltraClientOptions,
 } from "./types.js";

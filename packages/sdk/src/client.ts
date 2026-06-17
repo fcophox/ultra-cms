@@ -4,11 +4,14 @@ import type {
   Category,
   ContactInput,
   ListArticlesOptions,
+  Locale,
   UltraClientOptions,
 } from "./types.js";
 
 const ARTICLE_FIELDS =
-  "id, category_id, title, slug, excerpt, content, content_html, cover_image_url, status, seo_title, seo_description, published_at";
+  "id, category_id, title, slug, excerpt, content, content_html, cover_image_url, status, locale, translation_group, data, seo_title, seo_description, published_at";
+
+const DEFAULT_LOCALE: Locale = "es";
 
 /**
  * Cliente de solo lectura para consumir contenido de UltraCMS desde
@@ -48,6 +51,9 @@ export class UltraClient {
         if (!category) return [];
         query = query.eq("category_id", category.id);
       }
+      if (options.locale) {
+        query = query.eq("locale", options.locale);
+      }
       if (options.limit != null) {
         query = query.range(
           options.offset ?? 0,
@@ -63,6 +69,7 @@ export class UltraClient {
     bySlug: async (params: {
       category: string;
       slug: string;
+      locale?: Locale;
     }): Promise<Article | null> => {
       const category = await this.categoryBySlug(params.category);
       if (!category) return null;
@@ -71,6 +78,7 @@ export class UltraClient {
         .select(ARTICLE_FIELDS)
         .eq("category_id", category.id)
         .eq("slug", params.slug)
+        .eq("locale", params.locale ?? DEFAULT_LOCALE)
         .eq("status", "published")
         .maybeSingle();
       if (error) throw error;

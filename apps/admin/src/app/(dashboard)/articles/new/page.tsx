@@ -14,7 +14,7 @@ export default async function NewArticlePage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-3">
-        <Link href="/articles" className="text-sm text-slate-500 hover:underline">
+        <Link href="/articles" className="text-sm text-muted hover:underline">
           ← Artículos
         </Link>
         <h1 className="text-2xl font-bold tracking-tight">Nuevo artículo</h1>

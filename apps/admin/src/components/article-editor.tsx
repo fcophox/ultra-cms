@@ -17,14 +17,23 @@ interface Props {
 }
 
 const field =
-  "w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100";
-const label = "text-sm font-medium text-slate-700";
+  "w-full rounded-lg border border-border px-3 py-2 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20";
+const label = "text-sm font-medium text-foreground";
 
 export function ArticleEditor({ categories, initial }: Props) {
   const [title, setTitle] = useState(initial?.title ?? "");
   const [slug, setSlug] = useState(initial?.slug ?? "");
   const [slugTouched, setSlugTouched] = useState(Boolean(initial?.slug));
   const [categoryId, setCategoryId] = useState(initial?.category_id ?? "");
+  const [locale, setLocale] = useState<ArticleInput["locale"]>(
+    initial?.locale ?? "es",
+  );
+  const [translationGroup, setTranslationGroup] = useState(
+    initial?.translation_group ?? "",
+  );
+  const [dataText, setDataText] = useState(
+    initial?.data ? JSON.stringify(initial.data, null, 2) : "",
+  );
   const [excerpt, setExcerpt] = useState(initial?.excerpt ?? "");
   const [status, setStatus] = useState<ArticleInput["status"]>(
     initial?.status ?? "draft",
@@ -65,15 +74,29 @@ export function ArticleEditor({ categories, initial }: Props) {
   function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
+
+    let data: unknown = null;
+    if (dataText.trim()) {
+      try {
+        data = JSON.parse(dataText);
+      } catch {
+        setError("El campo «Datos estructurados» no es JSON válido.");
+        return;
+      }
+    }
+
     startTransition(async () => {
       const result = await saveArticle({
         id: initial?.id,
         category_id: categoryId,
         title,
         slug,
+        locale,
+        translation_group: translationGroup,
         excerpt,
         content: body.json,
         content_html: body.html,
+        data,
         cover_image_url: coverUrl,
         status,
         seo_title: seoTitle,
@@ -115,7 +138,7 @@ export function ArticleEditor({ categories, initial }: Props) {
           <button
             type="submit"
             disabled={pending}
-            className="flex-1 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-indigo-700 disabled:opacity-60"
+            className="flex-1 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white transition hover:bg-primary/90 disabled:opacity-60"
           >
             {pending ? "Guardando…" : "Guardar"}
           </button>
@@ -149,6 +172,20 @@ export function ArticleEditor({ categories, initial }: Props) {
                 {c.name}
               </option>
             ))}
+          </select>
+        </div>
+
+        <div className="space-y-1">
+          <label className={label}>Idioma</label>
+          <select
+            value={locale}
+            onChange={(e) =>
+              setLocale(e.target.value as ArticleInput["locale"])
+            }
+            className={field}
+          >
+            <option value="es">Español</option>
+            <option value="en">English</option>
           </select>
         </div>
 
@@ -193,7 +230,7 @@ export function ArticleEditor({ categories, initial }: Props) {
             className="text-sm"
           />
           {uploadingCover && (
-            <p className="text-xs text-slate-400">Subiendo…</p>
+            <p className="text-xs text-muted">Subiendo…</p>
           )}
         </div>
 
@@ -213,6 +250,39 @@ export function ArticleEditor({ categories, initial }: Props) {
               className={field}
               placeholder="SEO descripción"
             />
+          </div>
+        </details>
+
+        <details className="space-y-1">
+          <summary className={`${label} cursor-pointer`}>
+            Avanzado (traducción / datos)
+          </summary>
+          <div className="mt-2 space-y-3">
+            <div className="space-y-1">
+              <label className="text-xs text-muted">
+                Grupo de traducción (UUID) — pega el de la versión en otro
+                idioma para enlazarlas; déjalo vacío para crear uno nuevo.
+              </label>
+              <input
+                value={translationGroup}
+                onChange={(e) => setTranslationGroup(e.target.value)}
+                className={field}
+                placeholder="auto"
+              />
+            </div>
+            <div className="space-y-1">
+              <label className="text-xs text-muted">
+                Datos estructurados (JSON) — para servicios u otro contenido
+                con campos propios.
+              </label>
+              <textarea
+                value={dataText}
+                onChange={(e) => setDataText(e.target.value)}
+                rows={8}
+                className={`${field} font-mono text-xs`}
+                placeholder='{ "plans": [], "process": [] }'
+              />
+            </div>
           </div>
         </details>
       </aside>

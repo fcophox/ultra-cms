@@ -5,7 +5,7 @@ export const dynamic = "force-dynamic";
 
 const STATUS_STYLES: Record<string, string> = {
   new: "bg-green-100 text-green-700",
-  read: "bg-slate-100 text-slate-600",
+  read: "bg-foreground/10 text-muted",
   archived: "bg-amber-100 text-amber-700",
 };
 
@@ -50,8 +50,8 @@ export default async function ContactsPage({
               href={f.value ? `/contacts?status=${f.value}` : "/contacts"}
               className={`rounded-lg px-3 py-1.5 text-sm font-medium transition ${
                 active
-                  ? "bg-indigo-600 text-white"
-                  : "border border-slate-300 text-slate-600 hover:bg-slate-100"
+                  ? "bg-primary text-white"
+                  : "border border-border text-muted hover:bg-foreground/5"
               }`}
             >
               {f.label}
@@ -60,9 +60,9 @@ export default async function ContactsPage({
         })}
       </div>
 
-      <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white">
+      <div className="overflow-hidden rounded-2xl border border-border bg-surface">
         <table className="w-full text-sm">
-          <thead className="bg-slate-50 text-left text-slate-500">
+          <thead className="bg-foreground/[0.03] text-left text-muted">
             <tr>
               <th className="px-4 py-3 font-medium">Nombre</th>
               <th className="px-4 py-3 font-medium">Email</th>
@@ -71,20 +71,20 @@ export default async function ContactsPage({
               <th className="px-4 py-3 font-medium">Estado</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-100">
+          <tbody className="divide-y divide-border">
             {contacts?.map((c) => (
-              <tr key={c.id} className="hover:bg-slate-50">
+              <tr key={c.id} className="hover:bg-foreground/5">
                 <td className="px-4 py-3 font-medium">
                   <Link
                     href={`/contacts/${c.id}`}
-                    className="hover:text-indigo-600 hover:underline"
+                    className="hover:text-primary hover:underline"
                   >
                     {c.name}
                   </Link>
                 </td>
-                <td className="px-4 py-3 text-slate-500">{c.email}</td>
-                <td className="px-4 py-3 text-slate-500">{c.subject ?? "—"}</td>
-                <td className="px-4 py-3 text-slate-500">{c.source ?? "—"}</td>
+                <td className="px-4 py-3 text-muted">{c.email}</td>
+                <td className="px-4 py-3 text-muted">{c.subject ?? "—"}</td>
+                <td className="px-4 py-3 text-muted">{c.source ?? "—"}</td>
                 <td className="px-4 py-3">
                   <span
                     className={`rounded-full px-2 py-1 text-xs font-medium ${
@@ -98,7 +98,7 @@ export default async function ContactsPage({
             ))}
             {!contacts?.length && (
               <tr>
-                <td colSpan={5} className="px-4 py-8 text-center text-slate-400">
+                <td colSpan={5} className="px-4 py-8 text-center text-muted">
                   No hay contactos.
                 </td>
               </tr>
