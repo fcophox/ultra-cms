@@ -3,8 +3,14 @@
 import { useEffect, useState } from "react";
 import { getTheme, toggleTheme, type Theme } from "@/lib/theme";
 
-/** Botón para alternar tema; refleja el estado actual (también si cambia por ⌘B). */
-export function ThemeToggle() {
+/** Botón para alternar tema. Soporta vista sidebar y popover. */
+export function ThemeToggle({
+  collapsed = false,
+  variant = "sidebar",
+}: {
+  collapsed?: boolean;
+  variant?: "sidebar" | "popover";
+}) {
   const [theme, setThemeState] = useState<Theme>("light");
 
   useEffect(() => {
@@ -15,16 +21,41 @@ export function ThemeToggle() {
     return () => window.removeEventListener("themechange", handler);
   }, []);
 
+  const label = theme === "dark" ? "Modo claro" : "Modo oscuro";
+  const icon = theme === "dark" ? "☀︎" : "☾";
+
+  if (variant === "popover") {
+    return (
+      <button
+        type="button"
+        onClick={toggleTheme}
+        className="sidebar-popover-item"
+      >
+        <span className="sidebar-icon" aria-hidden>
+          {icon}
+        </span>
+        {label}
+        <span className="ml-auto text-xs text-muted">⌘B</span>
+      </button>
+    );
+  }
+
   return (
     <button
       type="button"
       onClick={toggleTheme}
-      title="Cambiar tema (⌘B / Ctrl+B)"
-      className="mt-2 flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm font-medium text-muted transition hover:bg-foreground/5"
+      title={collapsed ? label : "Cambiar tema (⌘B / Ctrl+B)"}
+      className="sidebar-link"
     >
-      <span aria-hidden>{theme === "dark" ? "☀︎" : "☾"}</span>
-      {theme === "dark" ? "Modo claro" : "Modo oscuro"}
-      <span className="ml-auto text-xs text-muted">⌘B</span>
+      <span className="sidebar-icon" aria-hidden>
+        {icon}
+      </span>
+      {!collapsed && (
+        <>
+          <span className="sidebar-label">{label}</span>
+          <span className="ml-auto text-xs text-muted">⌘B</span>
+        </>
+      )}
     </button>
   );
 }
