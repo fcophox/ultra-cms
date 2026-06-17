@@ -4,7 +4,8 @@ CMS headless **white-label** sobre **Next.js + Supabase**. Clónalo por proyecto
 apúntalo a un Supabase propio y consume el contenido desde cualquier frontend con
 `@ultracms/sdk`.
 
-Ver el diseño completo en [PLAN.md](./PLAN.md).
+Ver el diseño completo en [PLAN.md](./PLAN.md), el deploy en
+[DEPLOY.md](./DEPLOY.md) y las novedades en [CHANGELOG.md](./CHANGELOG.md).
 
 ## Estructura
 
