@@ -76,9 +76,44 @@ git push origin main
 # → cada panel muestra "UltraCMS v0.3.0 · Novedades"
 ```
 
-**Único paso manual** si la mejora trae cambios de base de datos: aplicar la
-migración nueva a cada Supabase (`supabase db push` por proyecto). Esto se puede
-automatizar con un GitHub Action — pendiente.
+**Cambios de base de datos** (una migración nueva): se aplican solos a todos los
+Supabase mediante el GitHub Action — ver abajo.
+
+---
+
+## Migraciones automáticas (GitHub Action)
+
+El workflow [`.github/workflows/db-migrate.yml`](.github/workflows/db-migrate.yml)
+aplica `supabase/migrations/**` a **cada** Supabase cuando cambian las migraciones
+en `main` (o manualmente desde la pestaña *Actions*).
+
+### Configuración (una vez)
+En **Settings → Secrets and variables → Actions**, crea 2 secrets:
+
+| Secret | Valor |
+|---|---|
+| `SUPABASE_ACCESS_TOKEN` | Token de cuenta — [supabase.com/dashboard/account/tokens](https://supabase.com/dashboard/account/tokens) |
+| `SUPABASE_PROJECTS` | JSON con los proyectos destino (ref + contraseña de BD) |
+
+Ejemplo de `SUPABASE_PROJECTS`:
+```json
+[
+  { "ref": "abcd1234efgh5678", "password": "db-pass-acme" },
+  { "ref": "ijkl9012mnop3456", "password": "db-pass-beta" }
+]
+```
+> El `ref` está en la URL del proyecto Supabase (`https://<ref>.supabase.co`).
+> La `password` es la *Database Password* que definiste al crear el proyecto.
+
+### Sumar un cliente nuevo
+Agrega un objeto `{ "ref": "...", "password": "..." }` al JSON del secret. Nada más.
+
+### Cómo se ejecuta
+- **Automático:** al hacer push a `main` que toque `supabase/migrations/**`.
+- **Manual:** pestaña *Actions* → *Aplicar migraciones a todos los Supabase* → *Run workflow*.
+
+`supabase db push` solo aplica las migraciones que falten en cada base, así que es
+seguro re-ejecutarlo.
 
 ---
 

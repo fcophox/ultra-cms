@@ -1,0 +1,73 @@
+name: Aplicar migraciones a todos los Supabase
+
+# Aplica supabase/migrations/** a cada proyecto Supabase configurado.
+# Se dispara cuando cambian las migraciones en main, o manualmente.
+#
+# Requiere 2 secrets en el repo (Settings → Secrets and variables → Actions):
+#
+#   SUPABASE_ACCESS_TOKEN   token de cuenta (supabase.com/dashboard/account/tokens)
+#   SUPABASE_PROJECTS       JSON con los proyectos destino, p.ej.:
+#                           [
+#                             {"ref":"abcd...","password":"db-pass-acme"},
+#                             {"ref":"efgh...","password":"db-pass-beta"}
+#                           ]
+#
+# Para sumar un cliente nuevo: agrega un objeto {ref,password} al JSON.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "supabase/migrations/**"
+  workflow_dispatch:
+
+# Evita ejecuciones solapadas que pisen la misma base.
+concurrency:
+  group: db-migrate
+  cancel-in-progress: false
+
+jobs:
+  push-migrations:
+    runs-on: ubuntu-latest
+    env:
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Aplicar migraciones a cada proyecto
+        env:
+          SUPABASE_PROJECTS: ${{ secrets.SUPABASE_PROJECTS }}
+        run: |
+          set -uo pipefail
+
+          if [ -z "${SUPABASE_PROJECTS:-}" ]; then
+            echo "::error::Falta el secret SUPABASE_PROJECTS"
+            exit 1
+          fi
+
+          failed=0
+          while read -r project; do
+            ref=$(echo "$project" | jq -r '.ref')
+            pass=$(echo "$project" | jq -r '.password')
+            echo "::group::Proyecto $ref"
+
+            if supabase link --project-ref "$ref" --password "$pass" \
+               && supabase db push --password "$pass"; then
+              echo "✓ $ref actualizado"
+            else
+              echo "::error::Falló el push a $ref"
+              failed=1
+            fi
+
+            echo "::endgroup::"
+          done < <(echo "$SUPABASE_PROJECTS" | jq -c '.[]')
+
+          if [ "$failed" -ne 0 ]; then
+            echo "::error::Una o más migraciones fallaron"
+            exit 1
+          fi
+          echo "Todas las migraciones aplicadas correctamente."

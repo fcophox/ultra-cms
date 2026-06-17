@@ -18,6 +18,9 @@ y el versionado sigue [SemVer](https://semver.org/lang/es/):
 - Internacionalización de artículos (es / en) con grupo de traducción.
 - Campo de datos estructurados (`data` JSONB) para contenidos tipo servicios.
 - Número de versión visible en el panel, con enlace a este changelog.
+- Guía de deploy en Vercel (un repo, varios proyectos) en `DEPLOY.md`.
+- GitHub Action que aplica las migraciones a todos los Supabase
+  automáticamente al cambiar el esquema.
 
 ## [0.2.0] — 2026-06-17
 
