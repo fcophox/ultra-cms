@@ -1,6 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import {
+  isPluginActive,
+  setPluginActive,
+  PLUGIN_EVENT,
+  type PluginChangeDetail,
+} from "@/lib/plugins";
 
 interface PluginCardProps {
   id: string;
@@ -12,26 +18,20 @@ interface PluginCardProps {
 
 /**
  * Card de complemento: icono, nombre, descripción y switch de activación.
- * El estado se recuerda en localStorage (hasta que haya backend real).
+ * Al activarlo aparece como entrada en el sidebar (vía evento compartido).
  */
 export function PluginCard({ id, name, description, children }: PluginCardProps) {
   const [active, setActive] = useState(false);
 
   useEffect(() => {
-    setActive(localStorage.getItem(`plugin:${id}`) === "true");
+    setActive(isPluginActive(id));
+    const handler = (e: Event) => {
+      const detail = (e as CustomEvent<PluginChangeDetail>).detail;
+      if (detail.id === id) setActive(detail.active);
+    };
+    window.addEventListener(PLUGIN_EVENT, handler);
+    return () => window.removeEventListener(PLUGIN_EVENT, handler);
   }, [id]);
-
-  function toggle() {
-    setActive((prev) => {
-      const next = !prev;
-      try {
-        localStorage.setItem(`plugin:${id}`, String(next));
-      } catch {
-        // localStorage no disponible: el estado no se recuerda.
-      }
-      return next;
-    });
-  }
 
   return (
     <div className="flex flex-col rounded-2xl border border-border bg-surface p-5">
@@ -51,7 +51,7 @@ export function PluginCard({ id, name, description, children }: PluginCardProps)
           role="switch"
           aria-checked={active}
           aria-label={`Activar ${name}`}
-          onClick={toggle}
+          onClick={() => setPluginActive(id, !active)}
           className={`relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors ${
             active ? "bg-primary" : "bg-foreground/15"
           }`}

@@ -207,6 +207,13 @@ body {
   text-overflow: ellipsis;
 }
 
+/* Separador entre el menú principal y los complementos activados */
+.sidebar-section-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 0.5rem 0.25rem;
+}
+
 /* ── Profile trigger (bottom of sidebar) ── */
 .sidebar-profile-wrapper {
   position: relative;

@@ -3,6 +3,12 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { ThemeToggle } from "@/components/theme-toggle";
+import {
+  getActivePlugins,
+  pluginHref,
+  PLUGIN_EVENT,
+  type Plugin,
+} from "@/lib/plugins";
 
 /* ── Inline SVG icons ── */
 const Icons = {
@@ -70,6 +76,7 @@ export function Sidebar({ userEmail }: SidebarProps) {
   const [collapsed, setCollapsed] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [popoverOpen, setPopoverOpen] = useState(false);
+  const [activePlugins, setActivePlugins] = useState<Plugin[]>([]);
   const popoverRef = useRef<HTMLDivElement>(null);
 
   /* Restore persisted state */
@@ -77,6 +84,14 @@ export function Sidebar({ userEmail }: SidebarProps) {
     const saved = localStorage.getItem("sidebar-collapsed");
     if (saved === "true") setCollapsed(true);
     setMounted(true);
+  }, []);
+
+  /* Complementos activados → entradas en el menú (se actualiza en vivo) */
+  useEffect(() => {
+    const sync = () => setActivePlugins(getActivePlugins());
+    sync();
+    window.addEventListener(PLUGIN_EVENT, sync);
+    return () => window.removeEventListener(PLUGIN_EVENT, sync);
   }, []);
 
   /* Close popover on click outside */
@@ -142,6 +157,26 @@ export function Sidebar({ userEmail }: SidebarProps) {
               {!collapsed && <span className="sidebar-label">{item.label}</span>}
             </Link>
           ))}
+
+          {/* Complementos activados: bajo el menú, separados por una línea */}
+          {activePlugins.length > 0 && (
+            <>
+              <div className="sidebar-section-divider" />
+              {activePlugins.map((plugin) => (
+                <Link
+                  key={plugin.id}
+                  href={pluginHref(plugin.id)}
+                  className="sidebar-link"
+                  title={collapsed ? plugin.name : undefined}
+                >
+                  <span className="sidebar-icon">{plugin.icon}</span>
+                  {!collapsed && (
+                    <span className="sidebar-label">{plugin.name}</span>
+                  )}
+                </Link>
+              ))}
+            </>
+          )}
         </nav>
 
         {/* ── Profile trigger + floating popover ── */}
