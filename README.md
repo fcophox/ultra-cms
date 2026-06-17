@@ -75,6 +75,27 @@ const cats  = await cms.categories.list();
 await cms.contacts.submit({ name, email, message, source: "home" });
 ```
 
+### Agendamiento (complemento Calendario)
+
+Para el formulario «Agendemos una reunión virtual», lee la disponibilidad
+configurada en el panel:
+
+```ts
+// Bloques libres para una fecha que elige el cliente
+const slots = await cms.calendar.getAvailableSlots("2026-06-22");
+// → [{ id: "19:00", label: "19:00 - 19:15 hrs" }, …]  (vacío si el día está bloqueado)
+
+// Config completa de la semana (para deshabilitar días no disponibles)
+const week = await cms.calendar.getWeek();
+
+// Al elegir un bloque, se envía como parte del contacto:
+await cms.contacts.submit({
+  name, email, message,
+  source: "agenda",
+  metadata: { meetingDate: "2026-06-22", meetingSlot: "19:00" },
+});
+```
+
 ### Alternativa REST para el formulario de contacto
 
 Si un frontend no usa el SDK, puede hacer un POST plano (CORS abierto):

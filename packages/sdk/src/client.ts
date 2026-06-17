@@ -7,6 +7,10 @@ import type {
   Locale,
   UltraClientOptions,
 } from "./types.js";
+import { generateSlots, weekdayIndex } from "./calendar.js";
+import type { DayAvailability, TimeSlot } from "./calendar.js";
+
+const CALENDAR_FIELDS = "weekday, full_day_blocked, blocked_slots";
 
 const ARTICLE_FIELDS =
   "id, category_id, title, slug, excerpt, content, content_html, cover_image_url, status, locale, translation_group, data, seo_title, seo_description, published_at";
@@ -98,6 +102,37 @@ export class UltraClient {
         metadata: input.metadata ?? null,
       });
       if (error) throw error;
+    },
+  };
+
+  /** Disponibilidad del complemento Calendario. */
+  calendar = {
+    /** Configuración de los 7 días de la semana. */
+    getWeek: async (): Promise<DayAvailability[]> => {
+      const { data, error } = await this.supabase
+        .from("calendar_availability")
+        .select(CALENDAR_FIELDS)
+        .order("weekday");
+      if (error) throw error;
+      return (data ?? []) as DayAvailability[];
+    },
+
+    /**
+     * Bloques disponibles para una fecha concreta: los del rango menos los
+     * bloqueados ese día (o ninguno si el día está bloqueado por completo).
+     */
+    getAvailableSlots: async (date: Date | string): Promise<TimeSlot[]> => {
+      const { data, error } = await this.supabase
+        .from("calendar_availability")
+        .select(CALENDAR_FIELDS)
+        .eq("weekday", weekdayIndex(date))
+        .maybeSingle();
+      if (error) throw error;
+
+      const day = data as DayAvailability | null;
+      if (day?.full_day_blocked) return [];
+      const blocked = new Set(day?.blocked_slots ?? []);
+      return generateSlots().filter((slot) => !blocked.has(slot.id));
     },
   };
 

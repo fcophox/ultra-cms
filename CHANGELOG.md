@@ -18,6 +18,9 @@ y el versionado sigue [SemVer](https://semver.org/lang/es/):
 - Complemento **Calendario**: configurador de disponibilidad semanal
   (bloquear día completo o bloques horarios por día de la semana), con
   persistencia en Supabase (`calendar_availability`, migración 0003).
+- SDK: `calendar.getWeek()` y `calendar.getAvailableSlots(fecha)` para
+  reflejar la disponibilidad en el formulario «Agendemos una reunión
+  virtual» de cualquier frontend.
 - Internacionalización de artículos (es / en) con grupo de traducción.
 - Campo de datos estructurados (`data` JSONB) para contenidos tipo servicios.
 - Número de versión visible en el panel, con enlace a este changelog.
